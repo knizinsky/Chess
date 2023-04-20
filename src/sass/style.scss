@@ -1,1 +1,17 @@
-@use './reset' as *;
+@use "./reset" as *;
+
+main {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	#gameContainer {
+        display: flex;
+        justify-content: center;
+
+		#gameBoard {
+            max-width: 90%;
+        }
+	}
+}
