@@ -5,15 +5,21 @@ main {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	background-color: rgb(58, 57, 56);
 
 	#gameContainer {
-        display: flex;
-        justify-content: center;
+		display: flex;
+		justify-content: center;
 
 		#gameBoard {
-            max-width: 90%;
-            border: 2px solid black;
-            box-shadow: 0 0 5px 0px rgb(44, 44, 44);
-        }
+			border: 2px solid black;
+			box-shadow: 0 0 5px 0px rgb(44, 44, 44);
+		}
+	}
+}
+
+@media (max-width: 650px) {
+	#gameBoard {
+		max-width: 90%;
 	}
 }
