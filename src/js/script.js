@@ -112,6 +112,31 @@ const selectPiece = (event) => {
 	movePiece(selectedPiece, CR, CC);
 };
 
+const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPieceOnTarget, makeMove) => {
+	// Pawns
+	if(pieceID == "P"){
+		if(CR == 6 && (clickedRowTarget == CR-1 || clickedRowTarget ==CR-2) && CC == clickedColTarget){
+			drawPieceOnTarget();
+		}else if(clickedRowTarget == CR-1 && CC == clickedColTarget){
+			drawPieceOnTarget();
+		}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget < CR){
+			drawPieceOnTarget();
+		}else{
+			gameBoard.removeEventListener("click", makeMove);
+		}
+	}else if(pieceID == "p"){
+		if(CR == 1 && (clickedRowTarget == CR+1 || clickedRowTarget ==CR+2) && CC == clickedColTarget){
+			drawPieceOnTarget();
+		}else if(clickedRowTarget == CR+1 && CC == clickedColTarget){
+			drawPieceOnTarget();
+		}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget > CR){
+			drawPieceOnTarget();
+		}else{
+			gameBoard.removeEventListener("click", makeMove);
+		}
+	}
+}
+
 const movePiece = (selectedPiece, CR, CC) => {
 	let movedPiece;
 
@@ -147,34 +172,8 @@ const movePiece = (selectedPiece, CR, CC) => {
 								// }
 							}
 
-							const checkRules = () => {
-								
-								console.log(clickedCol, clickedRowTarget, CC, CR, i, j);
-
-								// Pawns
-								if(pieceID == "P"){
-									if(CR == 6 && (clickedRowTarget == CR-1 || clickedRowTarget ==CR-2) && CC == clickedColTarget){
-										drawPieceOnTarget();
-									}else if(clickedRowTarget == CR-1 && CC == clickedColTarget){
-										drawPieceOnTarget();
-									}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget < CR){
-										drawPieceOnTarget();
-									}else{
-										gameBoard.removeEventListener("click", makeMove);
-									}
-								}else if(pieceID == "p"){
-									if(CR == 1 && (clickedRowTarget == CR+1 || clickedRowTarget ==CR+2) && CC == clickedColTarget){
-										drawPieceOnTarget();
-									}else if(clickedRowTarget == CR+1 && CC == clickedColTarget){
-										drawPieceOnTarget();
-									}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && board[clickedColTarget][clickedRowTarget] != ""){
-										drawPieceOnTarget();
-									}
-								}
-							}
-
 							gameBoard.removeEventListener("click", makeMove);
-							checkRules()
+							checkRules(pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPieceOnTarget, makeMove)
 						};
 						gameBoard.addEventListener("click", makeMove);
 					}
