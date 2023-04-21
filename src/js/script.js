@@ -32,6 +32,24 @@ const pieceNames = {
 	K: "Wking",
 };
 
+const whitePiecesID = {
+		P: "Wpawn",
+		R: "Wrook",
+		N: "Wknight",
+		B: "Wbishop",
+		Q: "Wqueen",
+		K: "Wking",
+	};
+
+	const blackPiecesID = {
+		p: "Bpawn",
+		r: "Brook",
+		n: "Bknight",
+		b: "Bbishop",
+		q: "Bqueen",
+		k: "Bking",
+	};
+
 let tileSize = gameBoardSize / 8;
 let selectedPiece = null;
 let whitesMove = true;
@@ -96,59 +114,68 @@ const selectPiece = (event) => {
 
 const movePiece = (selectedPiece, CR, CC) => {
 	let movedPiece;
-	const whitePiecesID = {
-		P: "Wpawn",
-		R: "Wrook",
-		N: "Wknight",
-		B: "Wbishop",
-		Q: "Wqueen",
-		K: "Wking",
-	};
-
-	const blackPiecesID = {
-		p: "Bpawn",
-		r: "Brook",
-		n: "Bknight",
-		b: "Bbishop",
-		q: "Bqueen",
-		k: "Bking",
-	};
 
 	const whichPiece = (pieceID) => {
 		if (selectedPiece == pieceID) {
 			board.forEach((clickedRow, i) => {
 				clickedRow.forEach((clickedCol, j) => {
 					if (clickedCol == pieceID && CR == j && CC == i) {
-						board[CC][CR] = "";
-
 						const makeMove = (event) => {
-							drawBoardAndPieces(gameBoardSize);
 							let x = event.offsetX;
 							let y = event.offsetY;
 
-							const clickedRow2 = Math.floor(y / tileSize);
-							const clickedCol2 = Math.floor(x / tileSize);
+							const clickedRowTarget = Math.floor(y / tileSize);
+							const clickedColTarget = Math.floor(x / tileSize);
 
-							board[CC][CR] = "";
+							const drawPieceOnTarget = () => {
+								// if (board[clickedColTarget][clickedRowTarget] == "" || whitePiece == true || whitePiece == false) {
+									board[clickedColTarget][clickedRowTarget] = clickedCol;
 
-							if (board[clickedCol2][clickedRow2] == "") {
-								board[clickedCol2][clickedRow2] = clickedCol;
+									movedPiece = board[clickedColTarget][clickedRowTarget];
+	
+									drawPiece(
+										pieceNames[movedPiece],
+										clickedColTarget * tileSize,
+										clickedRowTarget * tileSize
+									);
 
-								movedPiece = board[clickedCol2][clickedRow2];
+									board[CC][CR] = "";
+	
+									drawBoardAndPieces(gameBoardSize);
+									
+									whitesMove = !whitesMove;
+								// }
+							}
 
-								drawPiece(
-									pieceNames[movedPiece],
-									clickedCol2 * tileSize,
-									clickedRow2 * tileSize
-								);
+							const checkRules = () => {
+								
+								console.log(clickedCol, clickedRowTarget, CC, CR, i, j);
 
-								whitesMove = !whitesMove;
-								console.log(whitesMove);
+								// Pawns
+								if(pieceID == "P"){
+									if(CR == 6 && (clickedRowTarget == CR-1 || clickedRowTarget ==CR-2) && CC == clickedColTarget){
+										drawPieceOnTarget();
+									}else if(clickedRowTarget == CR-1 && CC == clickedColTarget){
+										drawPieceOnTarget();
+									}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget < CR){
+										drawPieceOnTarget();
+									}else{
+										gameBoard.removeEventListener("click", makeMove);
+									}
+								}else if(pieceID == "p"){
+									if(CR == 1 && (clickedRowTarget == CR+1 || clickedRowTarget ==CR+2) && CC == clickedColTarget){
+										drawPieceOnTarget();
+									}else if(clickedRowTarget == CR+1 && CC == clickedColTarget){
+										drawPieceOnTarget();
+									}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && board[clickedColTarget][clickedRowTarget] != ""){
+										drawPieceOnTarget();
+									}
+								}
 							}
 
 							gameBoard.removeEventListener("click", makeMove);
+							checkRules()
 						};
-
 						gameBoard.addEventListener("click", makeMove);
 					}
 				});
@@ -156,24 +183,24 @@ const movePiece = (selectedPiece, CR, CC) => {
 		}
 	};
 
+	let whitePiece;
+
 	if (whitesMove) {
 		for (let pieceID in whitePiecesID) {
 			if (pieceID == selectedPiece) {
+				whitePiece = true;
 				whichPiece(pieceID);
 			}
 		}
 	} else {
 		for (let pieceID in blackPiecesID) {
 			if (pieceID == selectedPiece) {
+				whitePiece = false;
 				whichPiece(pieceID);
 			}
 		}
 	}
 };
-
-const whiteMoves = () => {};
-
-const blackMoves = () => {};
 
 window.addEventListener("resize", resizeCanvas);
 
