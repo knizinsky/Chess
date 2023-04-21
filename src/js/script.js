@@ -92,7 +92,6 @@ const selectPiece = (event) => {
 	selectedPiece = board[clickedCol][clickedRow];
 
 	movePiece(selectedPiece, CR, CC);
-	// console.log(CC, CR, "yolo");
 };
 
 const movePiece = (selectedPiece, CR, CC) => {
@@ -115,16 +114,12 @@ const movePiece = (selectedPiece, CR, CC) => {
 		k: "Bking",
 	};
 
-	
-
-
 	const whichPiece = (pieceID) => {
 		if (selectedPiece == pieceID) {
 			board.forEach((clickedRow, i) => {
 				clickedRow.forEach((clickedCol, j) => {
 					if (clickedCol == pieceID && CR == j && CC == i) {
 						board[CC][CR] = "";
-						console.log(board[CC][CR]);
 
 						const makeMove = (event) => {
 							drawBoardAndPieces(gameBoardSize);
@@ -134,11 +129,7 @@ const movePiece = (selectedPiece, CR, CC) => {
 							const clickedRow2 = Math.floor(y / tileSize);
 							const clickedCol2 = Math.floor(x / tileSize);
 
-							
-							
 							board[CC][CR] = "";
-
-							console.log(board);
 
 							if (board[clickedCol2][clickedRow2] == "") {
 								board[clickedCol2][clickedRow2] = clickedCol;
@@ -150,9 +141,10 @@ const movePiece = (selectedPiece, CR, CC) => {
 									clickedCol2 * tileSize,
 									clickedRow2 * tileSize
 								);
-							}
 
-							
+								whitesMove = !whitesMove;
+								console.log(whitesMove);
+							}
 
 							gameBoard.removeEventListener("click", makeMove);
 						};
@@ -164,35 +156,18 @@ const movePiece = (selectedPiece, CR, CC) => {
 		}
 	};
 
-
 	if (whitesMove) {
-		// whiteMoves(pieceName)
 		for (let pieceID in whitePiecesID) {
-			if(pieceID == selectedPiece){
-				whichPiece(pieceID)
-				// console.log(pieceID);
+			if (pieceID == selectedPiece) {
+				whichPiece(pieceID);
 			}
-		  }
-
-		// whitesMove = false;
+		}
 	} else {
 		for (let pieceID in blackPiecesID) {
-			if(pieceID == selectedPiece){
-				// whichPiece(pieceID)
-				console.log("yolo2");
+			if (pieceID == selectedPiece) {
+				whichPiece(pieceID);
 			}
-		  }
-		// whitesMove = true;
-	}
-};
-
-const whosMove = () => {
-	if (whitesMove) {
-		// whiteMoves(pieceName)
-		// whitesMove = false;
-	} else {
-		// blackMoves(pieceName)
-		// whitesMove = true;
+		}
 	}
 };
 
