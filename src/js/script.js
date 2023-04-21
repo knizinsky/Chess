@@ -33,6 +33,8 @@ const pieceNames = {
 };
 
 let tileSize = gameBoardSize / 8;
+let selectedPiece = null;
+let whitesMove = true;
 
 const drawPiece = (pieceName, x, y) => {
 	const img = new Image();
@@ -77,7 +79,7 @@ const resizeCanvas = () => {
 	drawBoardAndPieces(gameBoardSize);
 };
 
-const getCursorPosition = (event) => {
+const selectPiece = (event) => {
 	let x = event.offsetX;
 	let y = event.offsetY;
 
@@ -87,46 +89,120 @@ const getCursorPosition = (event) => {
 	const CR = Math.floor(y / tileSize);
 	const CC = Math.floor(x / tileSize);
 
-	let piece;
+	selectedPiece = board[clickedCol][clickedRow];
 
-	if (board[clickedCol][clickedRow] == "p") {
-		board.forEach((clickedRow, i) => {
-			clickedRow.forEach((clickedCol, j) => {
-				if (clickedCol == "p" && CR == j && CC == i) {
-					gameBoard.addEventListener("click", (event) => {
-						let x = event.offsetX;
-						let y = event.offsetY;
+	movePiece(selectedPiece, CR, CC);
+	// console.log(CC, CR, "yolo");
+};
 
-						const clickedRow2 = Math.floor(y / tileSize);
-						const clickedCol2 = Math.floor(x / tileSize);
+const movePiece = (selectedPiece, CR, CC) => {
+	let movedPiece;
+	const whitePiecesID = {
+		P: "Wpawn",
+		R: "Wrook",
+		N: "Wknight",
+		B: "Wbishop",
+		Q: "Wqueen",
+		K: "Wking",
+	};
 
+	const blackPiecesID = {
+		p: "Bpawn",
+		r: "Brook",
+		n: "Bknight",
+		b: "Bbishop",
+		q: "Bqueen",
+		k: "Bking",
+	};
+
+	
+
+
+	const whichPiece = (pieceID) => {
+		if (selectedPiece == pieceID) {
+			board.forEach((clickedRow, i) => {
+				clickedRow.forEach((clickedCol, j) => {
+					if (clickedCol == pieceID && CR == j && CC == i) {
 						board[CC][CR] = "";
+						console.log(board[CC][CR]);
 
-						if (board[clickedCol2][clickedRow2] == "") {
-							board[clickedCol2][clickedRow2] = "p";
-
-							piece = board[clickedCol2][clickedRow2];
-
-							drawPiece(
-								pieceNames[piece],
-								clickedCol2 * tileSize,
-								clickedRow2 * tileSize
-							);
-
+						const makeMove = (event) => {
 							drawBoardAndPieces(gameBoardSize);
-						}
-					});
-				}
+							let x = event.offsetX;
+							let y = event.offsetY;
+
+							const clickedRow2 = Math.floor(y / tileSize);
+							const clickedCol2 = Math.floor(x / tileSize);
+
+							
+							
+							board[CC][CR] = "";
+
+							console.log(board);
+
+							if (board[clickedCol2][clickedRow2] == "") {
+								board[clickedCol2][clickedRow2] = clickedCol;
+
+								movedPiece = board[clickedCol2][clickedRow2];
+
+								drawPiece(
+									pieceNames[movedPiece],
+									clickedCol2 * tileSize,
+									clickedRow2 * tileSize
+								);
+							}
+
+							
+
+							gameBoard.removeEventListener("click", makeMove);
+						};
+
+						gameBoard.addEventListener("click", makeMove);
+					}
+				});
 			});
-		});
+		}
+	};
+
+
+	if (whitesMove) {
+		// whiteMoves(pieceName)
+		for (let pieceID in whitePiecesID) {
+			if(pieceID == selectedPiece){
+				whichPiece(pieceID)
+				// console.log(pieceID);
+			}
+		  }
+
+		// whitesMove = false;
+	} else {
+		for (let pieceID in blackPiecesID) {
+			if(pieceID == selectedPiece){
+				// whichPiece(pieceID)
+				console.log("yolo2");
+			}
+		  }
+		// whitesMove = true;
 	}
 };
 
-gameBoard.addEventListener("click", getCursorPosition);
+const whosMove = () => {
+	if (whitesMove) {
+		// whiteMoves(pieceName)
+		// whitesMove = false;
+	} else {
+		// blackMoves(pieceName)
+		// whitesMove = true;
+	}
+};
+
+const whiteMoves = () => {};
+
+const blackMoves = () => {};
 
 window.addEventListener("resize", resizeCanvas);
 
 window.addEventListener("load", () => {
-	gameBoard.addEventListener("click", getCursorPosition);
+	gameBoard.addEventListener("click", selectPiece);
 	resizeCanvas();
-  });
+});
