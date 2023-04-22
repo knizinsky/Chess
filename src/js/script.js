@@ -113,6 +113,9 @@ const selectPiece = (event) => {
 };
 
 const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPieceOnTarget, makeMove) => {
+	let rowDifference = Math.abs(CR - clickedRowTarget)
+	let colDifference = Math.abs(CC - clickedColTarget)
+
 	// Pawns
 	if(pieceID == "P"){
 		if(CR == 6 && (clickedRowTarget == CR-1 || clickedRowTarget ==CR-2) && CC == clickedColTarget){
@@ -133,6 +136,17 @@ const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPie
 			drawPieceOnTarget();
 		}else{
 			gameBoard.removeEventListener("click", makeMove);
+		}
+
+	// Bishops
+	}else if(pieceID == "B" || pieceID == "b"){
+		if(colDifference == rowDifference){
+			drawPieceOnTarget();
+		}
+	// Knights
+	}else if(pieceID == 'N' || pieceID == 'n'){
+		if((rowDifference == 1 && colDifference == 2) || (rowDifference == 2 && colDifference == 1)){
+			drawPieceOnTarget();
 		}
 	}
 }
