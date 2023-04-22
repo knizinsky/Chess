@@ -153,6 +153,18 @@ const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPie
 		if(rowDifference == 0 || colDifference == 0){
 			drawPieceOnTarget();
 		}
+	// Kings
+	}else if(pieceID == 'K' || pieceID == "k"){
+		if((rowDifference >= 0 || colDifference >= 0) && rowDifference <=1 && colDifference <=1){
+			drawPieceOnTarget();
+		}
+	// Queens
+	}else if(pieceID == 'Q' || pieceID == "q"){
+		if(rowDifference == 0 || colDifference == 0){
+			drawPieceOnTarget();
+		}else if(colDifference == rowDifference){
+			drawPieceOnTarget();
+		}
 	}
 }
 
