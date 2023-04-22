@@ -148,6 +148,11 @@ const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPie
 		if((rowDifference == 1 && colDifference == 2) || (rowDifference == 2 && colDifference == 1)){
 			drawPieceOnTarget();
 		}
+	// Rooks
+	}else if(pieceID == 'R' || pieceID == 'r'){
+		if(rowDifference == 0 || colDifference == 0){
+			drawPieceOnTarget();
+		}
 	}
 }
 
