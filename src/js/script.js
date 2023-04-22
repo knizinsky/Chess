@@ -33,26 +33,27 @@ const pieceNames = {
 };
 
 const whitePiecesID = {
-		P: "Wpawn",
-		R: "Wrook",
-		N: "Wknight",
-		B: "Wbishop",
-		Q: "Wqueen",
-		K: "Wking",
-	};
+	P: "Wpawn",
+	R: "Wrook",
+	N: "Wknight",
+	B: "Wbishop",
+	Q: "Wqueen",
+	K: "Wking",
+};
 
-	const blackPiecesID = {
-		p: "Bpawn",
-		r: "Brook",
-		n: "Bknight",
-		b: "Bbishop",
-		q: "Bqueen",
-		k: "Bking",
-	};
+const blackPiecesID = {
+	p: "Bpawn",
+	r: "Brook",
+	n: "Bknight",
+	b: "Bbishop",
+	q: "Bqueen",
+	k: "Bking",
+};
 
 let tileSize = gameBoardSize / 8;
 let selectedPiece = null;
 let whitesMove = true;
+let whitePiece;
 
 const drawPiece = (pieceName, x, y) => {
 	const img = new Image();
@@ -112,61 +113,109 @@ const selectPiece = (event) => {
 	movePiece(selectedPiece, CR, CC);
 };
 
-const checkRules = (pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPieceOnTarget, makeMove) => {
-	let rowDifference = Math.abs(CR - clickedRowTarget)
-	let colDifference = Math.abs(CC - clickedColTarget)
+const checkRules = (
+	pieceID,
+	clickedRowTarget,
+	clickedColTarget,
+	CR,
+	CC,
+	drawPieceOnTarget,
+	makeMove
+) => {
+	let rowDifference = Math.abs(CR - clickedRowTarget);
+	let colDifference = Math.abs(CC - clickedColTarget);
+	let wrongTake = false;
 
-	// Pawns
-	if(pieceID == "P"){
-		if(CR == 6 && (clickedRowTarget == CR-1 || clickedRowTarget ==CR-2) && CC == clickedColTarget){
-			drawPieceOnTarget();
-		}else if(clickedRowTarget == CR-1 && CC == clickedColTarget){
-			drawPieceOnTarget();
-		}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget < CR){
-			drawPieceOnTarget();
-		}else{
-			gameBoard.removeEventListener("click", makeMove);
+	if (whitePiece) {
+		for (let pieceID in whitePiecesID) {
+			if (pieceID == board[clickedColTarget][clickedRowTarget]) {
+				wrongTake = true;
+			}
 		}
-	}else if(pieceID == "p"){
-		if(CR == 1 && (clickedRowTarget == CR+1 || clickedRowTarget ==CR+2) && CC == clickedColTarget){
-			drawPieceOnTarget();
-		}else if(clickedRowTarget == CR+1 && CC == clickedColTarget){
-			drawPieceOnTarget();
-		}else if((CC == (clickedColTarget+1) || CC == (clickedColTarget-1)) && (board[clickedColTarget][clickedRowTarget] != "") && clickedRowTarget > CR){
-			drawPieceOnTarget();
-		}else{
-			gameBoard.removeEventListener("click", makeMove);
-		}
-
-	// Bishops
-	}else if(pieceID == "B" || pieceID == "b"){
-		if(colDifference == rowDifference){
-			drawPieceOnTarget();
-		}
-	// Knights
-	}else if(pieceID == 'N' || pieceID == 'n'){
-		if((rowDifference == 1 && colDifference == 2) || (rowDifference == 2 && colDifference == 1)){
-			drawPieceOnTarget();
-		}
-	// Rooks
-	}else if(pieceID == 'R' || pieceID == 'r'){
-		if(rowDifference == 0 || colDifference == 0){
-			drawPieceOnTarget();
-		}
-	// Kings
-	}else if(pieceID == 'K' || pieceID == "k"){
-		if((rowDifference >= 0 || colDifference >= 0) && rowDifference <=1 && colDifference <=1){
-			drawPieceOnTarget();
-		}
-	// Queens
-	}else if(pieceID == 'Q' || pieceID == "q"){
-		if(rowDifference == 0 || colDifference == 0){
-			drawPieceOnTarget();
-		}else if(colDifference == rowDifference){
-			drawPieceOnTarget();
+	} else {
+		for (let pieceID in blackPiecesID) {
+			if (pieceID == board[clickedColTarget][clickedRowTarget]) {
+				wrongTake = true;
+			}
 		}
 	}
-}
+
+	if (wrongTake != true) {
+		// Pawns
+		if (pieceID == "P") {
+			if (
+				CR == 6 &&
+				(clickedRowTarget == CR - 1 || clickedRowTarget == CR - 2) &&
+				CC == clickedColTarget
+			) {
+				drawPieceOnTarget();
+			} else if (clickedRowTarget == CR - 1 && CC == clickedColTarget) {
+				drawPieceOnTarget();
+			} else if (
+				(CC == clickedColTarget + 1 || CC == clickedColTarget - 1) &&
+				board[clickedColTarget][clickedRowTarget] != "" &&
+				clickedRowTarget < CR
+			) {
+				drawPieceOnTarget();
+			} else {
+				gameBoard.removeEventListener("click", makeMove);
+			}
+		} else if (pieceID == "p") {
+			if (
+				CR == 1 &&
+				(clickedRowTarget == CR + 1 || clickedRowTarget == CR + 2) &&
+				CC == clickedColTarget
+			) {
+				drawPieceOnTarget();
+			} else if (clickedRowTarget == CR + 1 && CC == clickedColTarget) {
+				drawPieceOnTarget();
+			} else if (
+				(CC == clickedColTarget + 1 || CC == clickedColTarget - 1) &&
+				board[clickedColTarget][clickedRowTarget] != "" &&
+				clickedRowTarget > CR
+			) {
+				drawPieceOnTarget();
+			} else {
+				gameBoard.removeEventListener("click", makeMove);
+			}
+
+			// Bishops
+		} else if (pieceID == "B" || pieceID == "b") {
+			if (colDifference == rowDifference) {
+				drawPieceOnTarget();
+			}
+			// Knights
+		} else if (pieceID == "N" || pieceID == "n") {
+			if (
+				(rowDifference == 1 && colDifference == 2) ||
+				(rowDifference == 2 && colDifference == 1)
+			) {
+				drawPieceOnTarget();
+			}
+			// Rooks
+		} else if (pieceID == "R" || pieceID == "r") {
+			if (rowDifference == 0 || colDifference == 0) {
+				drawPieceOnTarget();
+			}
+			// Kings
+		} else if (pieceID == "K" || pieceID == "k") {
+			if (
+				(rowDifference >= 0 || colDifference >= 0) &&
+				rowDifference <= 1 &&
+				colDifference <= 1
+			) {
+				drawPieceOnTarget();
+			}
+			// Queens
+		} else if (pieceID == "Q" || pieceID == "q") {
+			if (rowDifference == 0 || colDifference == 0) {
+				drawPieceOnTarget();
+			} else if (colDifference == rowDifference) {
+				drawPieceOnTarget();
+			}
+		}
+	}
+};
 
 const movePiece = (selectedPiece, CR, CC) => {
 	let movedPiece;
@@ -185,27 +234,37 @@ const movePiece = (selectedPiece, CR, CC) => {
 
 							const drawPieceOnTarget = () => {
 								// if (board[clickedColTarget][clickedRowTarget] == "" || whitePiece == true || whitePiece == false) {
-									board[clickedColTarget][clickedRowTarget] = clickedCol;
+								board[clickedColTarget][clickedRowTarget] = clickedCol;
 
-									movedPiece = board[clickedColTarget][clickedRowTarget];
-	
-									drawPiece(
-										pieceNames[movedPiece],
-										clickedColTarget * tileSize,
-										clickedRowTarget * tileSize
-									);
+								movedPiece = board[clickedColTarget][clickedRowTarget];
 
-									board[CC][CR] = "";
-	
-									drawBoardAndPieces(gameBoardSize);
-									
-									whitesMove = !whitesMove;
+								drawPiece(
+									pieceNames[movedPiece],
+									clickedColTarget * tileSize,
+									clickedRowTarget * tileSize
+								);
+
+								board[CC][CR] = "";
+
+								drawBoardAndPieces(gameBoardSize);
+
+								whitesMove = !whitesMove;
 								// }
-							}
+							};
 
 							gameBoard.removeEventListener("click", makeMove);
-							checkRules(pieceID, clickedRowTarget, clickedColTarget, CR, CC, drawPieceOnTarget, makeMove)
+
+							checkRules(
+								pieceID,
+								clickedRowTarget,
+								clickedColTarget,
+								CR,
+								CC,
+								drawPieceOnTarget,
+								makeMove
+							);
 						};
+
 						gameBoard.addEventListener("click", makeMove);
 					}
 				});
@@ -213,13 +272,12 @@ const movePiece = (selectedPiece, CR, CC) => {
 		}
 	};
 
-	let whitePiece;
-
 	if (whitesMove) {
 		for (let pieceID in whitePiecesID) {
 			if (pieceID == selectedPiece) {
 				whitePiece = true;
 				whichPiece(pieceID);
+				console.log(pieceID);
 			}
 		}
 	} else {
