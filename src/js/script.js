@@ -245,6 +245,34 @@ const checkRules = (
 				colDifference <= 1
 			) {
 				drawPieceOnTarget();
+			}else{
+				if(pieceID == "K" && clickedRowTarget == 7 && clickedColTarget == 6 && board[7][7] == "R" && board[6][7] == "" && board[5][7] == ""){
+					board[6][7] = "K"
+					board[5][7] = "R"
+					
+					drawPiece("Wking", 6 * tileSize, 7 * tileSize);
+					drawPiece("Wrook", 5 * tileSize, 7 * tileSize);
+
+					board[7][7] = "";
+					board[4][7] = "";
+
+					drawBoardAndPieces(gameBoardSize);
+					whitesMove = !whitesMove;
+					
+				}else if(pieceID == "K" && clickedRowTarget == 7 && clickedColTarget == 2 && board[0][7] == "R" && board[1][7] == "" && board[2][7] == "" && board[3][7] == ""){
+					board[2][7] = "K"
+					board[3][7] = "R"
+					
+					drawPiece("Wking", 2 * tileSize, 7 * tileSize);
+					drawPiece("Wrook", 3 * tileSize, 7 * tileSize);
+
+					board[0][7] = "";
+					board[4][7] = "";
+
+					drawBoardAndPieces(gameBoardSize);
+					whitesMove = !whitesMove;
+					
+				}
 			}
 			// Queens
 		} else if (pieceID == "Q" || pieceID == "q") {
