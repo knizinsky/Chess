@@ -183,67 +183,45 @@ const checkRules = (
 		} else if (pieceID == "B" || pieceID == "b") {
 			if (colDifference == rowDifference) {
 				for (let i = 1; i <= 8; i++) {
-					let rowDifference2 = Math.abs(clickedRowTarget - i);
-					let colDifference2 = Math.abs(clickedColTarget - i);
-
 					let incrementedCol = Math.min(clickedColTarget + i, 7);
 					let decrementedCol = Math.abs(clickedColTarget - i);
 					let incrementedRow = Math.min(clickedRowTarget + i, 7);
 					let decrementedRow = Math.abs(clickedRowTarget - i);
 
-						const isCheck = () => {
-							if (
-								((board[incrementedCol][incrementedRow] == "k") || (board[incrementedCol][incrementedRow] == "K"))
-							) {
-								console.log("szach");
+					const isCheck = () => {
+						const checkPiece = (col, row) => {
+							if (board[col][row] === "k" && whitesMove == true) {
+								console.log("szachPrzezBialych");
 								console.log(i);
-								drawPiece("kCHECK", incrementedCol*tileSize, incrementedRow*tileSize)
-							} else if (
-								((board[decrementedCol][decrementedRow] == "k") || (board[decrementedCol][decrementedRow] == "K"))
-							) {
-								console.log("szach");
+								console.log(whitesMove);
+								drawPiece("kCHECK", col * tileSize, row * tileSize);
+							}else if(board[col][row] === "K" && whitesMove == false){
+								console.log("szachPrzezCzarnych");
 								console.log(i);
-								drawPiece("kCHECK", decrementedCol*tileSize, decrementedRow*tileSize)
-							} else if (
-								((board[incrementedCol][decrementedRow] == "k") || (board[incrementedCol][decrementedRow] == "K"))
-							) {
-								console.log("szach");
-								console.log(i);
-								drawPiece("kCHECK", incrementedCol*tileSize, decrementedRow*tileSize)
-							} else if (
-								((board[decrementedCol][incrementedRow] == "k") || (board[decrementedCol][incrementedRow] == "K"))
-							) {
-								console.log("szach");
-								console.log(i);
-								drawPiece("kCHECK", decrementedCol*tileSize, incrementedRow*tileSize)
+								console.log(whitesMove);
+								drawPiece("KCHECK2", col * tileSize, row * tileSize);
 							}
-						}
+						};
 
-						if (
-							((board[incrementedCol][incrementedRow] == ""))
-						) {
-							isCheck();
-						} else if (
-							((board[decrementedCol][decrementedRow] == ""))
-						) {
-							isCheck();
-						} else if (
-							((board[incrementedCol][decrementedRow] == ""))
-						) {
-							isCheck();
-						} else if (
-							((board[decrementedCol][incrementedRow] == ""))
-						) {
-							isCheck();
-						}
-						
-						
-						if(decrementedRow == 0){
-							break;
-						}
+						checkPiece(incrementedCol, incrementedRow);
+						checkPiece(decrementedCol, decrementedRow);
+						checkPiece(incrementedCol, decrementedRow);
+						checkPiece(decrementedCol, incrementedRow);
+					};
 
-						console.log(board[incrementedCol][decrementedRow]);
+					if (
+						board[incrementedCol][incrementedRow] === "" ||
+						board[decrementedCol][decrementedRow] === "" ||
+						board[incrementedCol][decrementedRow] === "" ||
+						board[decrementedCol][incrementedRow] === ""
+					) {
+						isCheck();
 					}
+
+					if (decrementedRow == 0) break;
+
+					console.log(board[incrementedCol][decrementedRow]);
+				}
 				drawPieceOnTarget();
 			}
 			// Knights
